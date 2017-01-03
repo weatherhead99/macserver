@@ -50,7 +50,8 @@ class User(IntegerPrimaryKeyMixin, NameMixin, DefaultReprMixin, Base):
     
 class Device(IntegerPrimaryKeyMixin,NameMixin, DefaultReprMixin, Base):
     __tablename__ = 'devices'
-    mac = Column(String)
+    #TODO: mac addresses are unique
+    hashmac = Column(String)
     ownerid = Column(Integer,ForeignKey('users.id'))
     owner = relationship('User', back_populates='devices',foreign_keys=ownerid)
     timesheets = relationship('TimeSheet',secondary=DeviceTimeSheetAssociation,

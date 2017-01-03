@@ -11,7 +11,8 @@ import api
 from random import randint, sample
 from itertools import chain, repeat
 from collections import defaultdict
-
+from datetime import datetime
+from macaddress import generate_random_mac
 
 import meninsheds
 
@@ -21,10 +22,12 @@ MiS_tags = ['shedder', 'hackspace', 'keyholder']
 MiS_test_users = ['Mike', 'Steve', 'Gemma', 'Horatio', 'Imhotep', 'Keith',
                       'Abaddon the Despoiler', 'Jeff', 'Ralph', 'Sanjeev', ' Надежда']        
 device_types = ['phone', 'tablet', 'laptop', 'CRAY-T94']    
-                      
+    
+
+                  
 def generate_test_user_data():
 
-    generate_random_mac = lambda:':'.join(hex(randint(0,255))[2:] for _ in range(6))        
+    
 
     #make up some random devices and assign random tags
     users = defaultdict(lambda: {})    
@@ -70,7 +73,7 @@ if __name__ == '__main__':
     print('-------------------------------')
     
     
-    print('number of people in shed: %d' % meninsheds.howmanypeopleinshed(macserver))
+    
 
     
     
