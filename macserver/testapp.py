@@ -6,18 +6,8 @@ Created on Tue Jan  3 07:16:50 2017
 @author: danw
 """
 
-import schema
-
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
-
-engine = create_engine('sqlite:///:memory:', echo=True)
-Session = sessionmaker(bind=engine)
-Session.configure(bind=engine)
-
-session = Session()
-#create schema
-schema.Base.metadata.create_all(engine)
+import api
+from schema import Tag, User, Device
 
 member_tag = Tag(name='member')
 
@@ -30,6 +20,10 @@ ed_user.devices = [ed_phone, ed_tablet]
 ed_user.tags = [member_tag]
 
 
-session.add_all([ed_user,ed_phone,ed_tablet,member_tag])
+a = api.MacServer('sqlite:///:memory:',True)
 
-session.commit()
+#with a.dboperation() as sesh:
+#    sesh.add(ed_user)
+#
+#with a.dboperation() as sesh:
+#    sesh.que
