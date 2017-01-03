@@ -16,7 +16,20 @@ Base = declarative_base()
 class IntegerPrimaryKeyMixin:
     id = Column(Integer,primary_key=True)
 
+class NameMixin:
+    name = Column(String)
         
+class DefaultReprMixin:
+    def __repr__(self):
+        nm = self.__class__.__name__
+
+        printid = self.id if self.id is not None else -1    
+        
+        if hasattr(self,'name'):
+            return '<%s, name=%s, id=%d>' % (nm, self.name, printid)
+        else:
+            return '<%s, id=%d>' %(nm,printid)
+    
 UserTagAssociation = Table('users_tags', Base.metadata,
                            Column('user_id',ForeignKey('users.id')),
                                   Column('tag_id',ForeignKey('tags.id')))
@@ -26,9 +39,8 @@ DeviceTimeSheetAssociation = Table('devices_timesheets', Base.metadata,
                                    Column('device_id',ForeignKey('devices.id')),
                                    Column('timesheet_id',ForeignKey('timesheets.id')))
     
-class User(IntegerPrimaryKeyMixin,Base):
+class User(IntegerPrimaryKeyMixin, NameMixin, DefaultReprMixin, Base):
     __tablename__ = 'users'
-    name = Column(String)
     tags = relationship('Tag', secondary=UserTagAssociation,
                         back_populates='users')    
     lastseen = Column(DateTime)
@@ -36,27 +48,30 @@ class User(IntegerPrimaryKeyMixin,Base):
     publish = Column(Boolean)
 
     
-class Device(IntegerPrimaryKeyMixin,Base):
+class Device(IntegerPrimaryKeyMixin,NameMixin, DefaultReprMixin, Base):
     __tablename__ = 'devices'
-    name = Column(String)
     mac = Column(String)
     ownerid = Column(Integer,ForeignKey('users.id'))
     owner = relationship('User', back_populates='devices',foreign_keys=ownerid)
     timesheets = relationship('TimeSheet',secondary=DeviceTimeSheetAssociation,
                               back_populates='devices_seen')    
+    lastseen = Column(DateTime)
+    #TODO: how to get SQLalchemy to update this automatically?
+    ismaindevice = Column(Boolean)
     
 User.devices = relationship('Device',order_by=Device.id,back_populates='owner',foreign_keys=Device.ownerid)
     
+
     
-class Tag(IntegerPrimaryKeyMixin,Base):
+class Tag(IntegerPrimaryKeyMixin,NameMixin, DefaultReprMixin, Base):
     __tablename__ = 'tags'
-    name = Column(String)
+    
     users = relationship('User',secondary=UserTagAssociation,
                         back_populates='tags')
     
 
 
-class TimeSheet(IntegerPrimaryKeyMixin,Base):
+class TimeSheet(IntegerPrimaryKeyMixin, DefaultReprMixin, Base):
     __tablename__ = 'timesheets'
     
     personid = Column(Integer,ForeignKey('users.id'))

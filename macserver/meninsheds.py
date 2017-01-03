@@ -34,6 +34,13 @@ Created on Tue Jan  3 08:26:01 2017
 
 
 from api import MacServer
+from sqlalchemy.sql import func
+import schema
 
-MiS_tags = ['shedder', 'hackspace', 'keyholder']
+def howmanypeopleinshed(apiobj):
+    with apiobj.dboperation() as session:
+        return session.query(func.count(schema.User.id)).scalar()
+    
+    
+    
 
