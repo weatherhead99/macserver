@@ -9,7 +9,7 @@ Created on Tue Jan  3 06:55:39 2017
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Table, Boolean
-
+from macaddress import sanitize, shahash
 
 Base = declarative_base()
 
@@ -59,6 +59,10 @@ class Device(IntegerPrimaryKeyMixin,NameMixin, DefaultReprMixin, Base):
     lastseen = Column(DateTime)
     #TODO: how to get SQLalchemy to update this automatically?
     ismaindevice = Column(Boolean)
+    
+    @classmethod
+    def from_plaintext_mac(cls,mac,*args,**kwargs):
+        return cls(hashmac=shahash(sanitize(mac)),*args,**kwargs)
     
 User.devices = relationship('Device',order_by=Device.id,back_populates='owner',foreign_keys=Device.ownerid)
     

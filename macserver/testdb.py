@@ -12,7 +12,7 @@ from random import randint, sample
 from itertools import chain, repeat
 from collections import defaultdict
 from datetime import datetime
-from macaddress import generate_random_mac
+from macaddress import generate_random
 
 import meninsheds
 
@@ -37,7 +37,7 @@ def generate_test_user_data():
         users[user]['tags'] = sample(MiS_tags, num_tags)
         
         num_devices = randint(0,3)    
-        users[user]['devices'] = {user+'_'+_:generate_random_mac() for _ in sample(device_types,num_devices)}
+        users[user]['devices'] = {user+'_'+_:generate_random() for _ in sample(device_types,num_devices)}
 
     return users
         
@@ -51,7 +51,7 @@ def populate_database(apiobj, users, tags):
     for username,userdata in users.items():
         thistags = [schema_tags[_] for _ in userdata['tags']]
         u = schema.User(name=username,tags=thistags)
-        thisdevices = [schema.Device(name=k,mac=v, owner = u) for k,v in userdata['devices'].items() ]
+        thisdevices = [schema.Device.from_plaintext_mac(v,name=k, owner = u) for k,v in userdata['devices'].items() ]
         
         schema_users.append(u)
         schema_devices.extend(thisdevices)

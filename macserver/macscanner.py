@@ -9,22 +9,32 @@ Created on Tue Jan  3 13:20:08 2017
 import datetime
 import schema
 from macaddress import *
+import subprocess
+from api import MacServer
+import asyncio
 
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
+def ARP_scan_shell():
+    raw_mac_scan = subprocess.check_output(['arp-scan','-l'])
+    macs = [_.split()[1].decode() for _ in raw_mac_scan.splitlines()[2:-3]]    
+    return macs
+
+
+
 allowed_config_fields = {'opportunistic_add': bool,
                          'timesheet_timeout': datetime.timedelta,
+                         'arp_scan_func' : ARP_scan_shell
                          }
 
 config_defaults = {'opportunistic_add' : False,
-                   'timesheet_timeout' : datetime.timedelta(minutes=30)}
+                   'timesheet_timeout' : datetime.timedelta(minutes=30),
+                    'arp_scan_func' : ARP_scan_shell}
                          
                          
 class MACScanner:
     def __init__(self,serverobj, **kwargs):
         self.__serverobj = serverobj
-        
-        
         ##general config stuffs move out somewhere
         for k,v in kwargs.items():
             if k not in allowed_config_fields:
@@ -47,31 +57,62 @@ class MACScanner:
             
         mac = sanitize(macaddr)
         validate(mac)
-        
         secure_mac = shahash(mac)
         
         with self.__serverobj.dboperation() as session:
-            
             try:
                 dev = session.query(schema.Device).filter(schema.Device.hashmac==secure_mac).one()
                 dev.lastseen = dt
             except MultipleResultsFound:
                 raise IndexError('multiple matching devices found for MAC query. This Should never happen')
-            except NoResultsFound:
+            except NoResultFound:
                 if self.opportunistic_add:
                     #TODO: add_new_device
-                    print('TODO:add_new_device')                
-                
-
-    def run_scan(self):
-        pass
+                    with self.__serverobj.dboperation() as session:
+                        dev = schema.Device(hashmac = secure_mac, lastseen=dt)
+                        session.add(dev)
                     
-                    
+                    print('adding new device')
+    
+    @asyncio.coroutine
+    def scan(self):
+        macs_found = self.arp_scan_func()
+        dtnow = datetime.datetime.now()
+        return macs_found,dtnow
 
-                
+@asyncio.coroutine
+def scanner_run(interval_seconds,macscan):
+    while True:
+        print('beginning scan')
+        macs, dtfound = yield from macscan.scan()
+        print('scan complete')
+        print('-------results-----------')
+        print(macs)
+        print('----- ' + str(dtfound) + '----')
+        
+        print('updating db state')
+        for mac in macs:
+            macscan.record_mac_seen(mac,dtfound)
+        
+        print('sleeping for %d seconds' % interval_seconds)
+        yield from asyncio.sleep(interval_seconds)
+    
+    
+    
 if __name__ =='__main__':
-    from api import MacServer
-    
+    #TODO: config
+    #TODO: graceful shutdown procedure
+    scan_interval_s = 3
     serv = MacServer('sqlite:///:memory:')
-    
     ms = MACScanner(serv,opportunistic_add=True)
+        
+    loop = asyncio.get_event_loop()
+    future = asyncio.Future()
+    task = asyncio.ensure_future(scanner_run(scan_interval_s,ms))
+    
+    loop.run_forever()
+    
+    
+    
+    
+    
