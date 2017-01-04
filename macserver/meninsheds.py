@@ -32,6 +32,10 @@ Created on Tue Jan  3 08:26:01 2017
 #* Query when someone was last seen at the shed (and possibly how long they have been there).
 
 
+#MIKE info on 
+#access point SNMP details
+
+
 
 from api import MacServer
 from sqlalchemy.sql import func
