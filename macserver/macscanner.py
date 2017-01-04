@@ -22,9 +22,10 @@ from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 class basic_ARP_scan:
     def __init__(self, arpscanargs = None):
-        self.arpscanargs = arpscanargs
+        self.arpscanargs = [] if arpscanargs is None else arpscanargs
         
     def __call__(self):
+        
         raw_mac_scan = subprocess.check_output(['arp-scan','-l'] + self.arpscanargs)
         macs = [_.split()[1].decode() for _ in raw_mac_scan.splitlines()[2:-3]]    
         return macs
