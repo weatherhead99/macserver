@@ -20,6 +20,7 @@ from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 #    macs = [_.split()[1].decode() for _ in raw_mac_scan.splitlines()[2:-3]]    
 #    return macs
 
+#TODO: rewrite as higher order function
 class basic_ARP_scan:
     def __init__(self, arpscanargs = None):
         self.arpscanargs = [] if arpscanargs is None else arpscanargs

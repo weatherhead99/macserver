@@ -34,8 +34,9 @@ Created on Tue Jan  3 08:26:01 2017
 
 #MIKE info on 
 #access point SNMP details
-
-
+#   community name: MiSMK_READ
+# IP address: 192.168.0.3 SNMP version 1 & 2
+# 
 
 from api import MacServer
 from sqlalchemy.sql import func
