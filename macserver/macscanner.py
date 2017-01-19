@@ -130,8 +130,8 @@ if __name__ =='__main__':
     scan_backend = snmp_macscan
 
     
-    serv = MacServer('sqlite:///:memory:')
-    #serv = MacServer('sqlite:///home/dan/macscanner.sqlite')
+    #serv = MacServer('sqlite:///:memory:')
+    serv = MacServer('sqlite:///home/dan/macscanner.sqlite')
     ms = MACScanner(serv,opportunistic_add=True, arp_scan_func=scan_backend)
         
     loop = asyncio.get_event_loop()
