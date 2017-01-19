@@ -9,7 +9,7 @@ Created on Tue Jan  3 06:55:39 2017
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Table, Boolean
-from macaddress import sanitize, shahash
+from macserver.macaddress import sanitize, shahash
 
 Base = declarative_base()
 

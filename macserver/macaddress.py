@@ -33,5 +33,5 @@ def string_from_octets(octets):
                 
 def shahash(mac):
     #TODO: how do you do this properly in py3k?
-    return hashlib.sha256(mac.encode()).digest()
+    return hashlib.sha256(mac.encode()).hexdigest()
 #    return hashlib.sha256(mac).digest()

@@ -7,10 +7,10 @@ Created on Tue Jan  3 13:20:08 2017
 """
 
 import datetime
-import schema
-from macaddress import *
+from macserver import schema
+from macserver.macaddress import *
 import subprocess
-from api import MacServer
+from macserver.api import MacServer
 import asyncio
 
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
@@ -103,9 +103,9 @@ def scanner_run(interval_seconds,macscan):
         print('beginning scan')
         macs, dtfound = yield from macscan.scan()
         print('scan complete')
-        print('-------results-----------')
-        print(macs)
-        print('----- ' + str(dtfound) + '----')
+        # print('-------results-----------')
+        # print(macs)
+        # print('----- ' + str(dtfound) + '----')
         
         print('updating db state')
         for mac in macs:
@@ -122,11 +122,11 @@ def scanner_run(interval_seconds,macscan):
 if __name__ =='__main__':
     #TODO: config
     #TODO: graceful shutdown procedure
-    scan_interval_s = 60    
+    scan_interval_s = 20
     #for laptop
     #scan_backend = basic_ARP_scan(['-I wlan0'])    
     #scan_backend = basic_ARP_scan()
-    from snmp_macscanner import snmp_macscan
+    from macserver.snmp_macscanner import snmp_macscan
     scan_backend = snmp_macscan
 
     connstr = 'mysql+pymysql://dan:8Rr2%ynRAm%ng*K4@localhost/macserver'

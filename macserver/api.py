@@ -6,7 +6,7 @@ Created on Tue Jan  3 08:12:45 2017
 @author: danw
 """
 
-import schema
+from macserver import schema
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
