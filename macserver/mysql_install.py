@@ -10,6 +10,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 def mysql_install(connstr,debug=False):
-    dbengine = create_engine(dbstr,echo=debug)
+    dbengine = create_engine(connstr,echo=debug)
     session = sessionmaker(dbengine)
-    schema.Base.metadata.create_all(dbengine)    
+    schema.Base.metadata.create_all(dbengine)
+
+
+if __name__ == '__main__':
+    connstr = 'mysql://dan@localhost/macserver'
+    mysql_install(connstr,True)    
