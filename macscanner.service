@@ -1,0 +1,8 @@
+[Unit]
+Description=MAC scanner server
+Requisite=mysql.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/macscanner.py
+User=dan
