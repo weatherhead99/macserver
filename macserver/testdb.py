@@ -26,9 +26,6 @@ device_types = ['phone', 'tablet', 'laptop', 'CRAY-T94']
 
                   
 def generate_test_user_data():
-
-    
-
     #make up some random devices and assign random tags
     users = defaultdict(lambda: {})    
     

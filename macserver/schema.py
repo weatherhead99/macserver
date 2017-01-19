@@ -17,7 +17,7 @@ class IntegerPrimaryKeyMixin:
     id = Column(Integer,primary_key=True)
 
 class NameMixin:
-    name = Column(String)
+    name = Column(String,unique=True)
         
 class DefaultReprMixin:
     def __repr__(self):
@@ -48,8 +48,9 @@ class User(IntegerPrimaryKeyMixin, NameMixin, DefaultReprMixin, Base):
     publish = Column(Boolean)
 
     
-class Device(IntegerPrimaryKeyMixin,NameMixin, DefaultReprMixin, Base):
+class Device(IntegerPrimaryKeyMixin,DefaultReprMixin, Base):
     __tablename__ = 'devices'
+    name = Column(String)
     #TODO: mac addresses are unique
     hashmac = Column(String)
     ownerid = Column(Integer,ForeignKey('users.id'))

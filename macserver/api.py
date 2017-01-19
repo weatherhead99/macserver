@@ -16,7 +16,7 @@ class MacServer:
     def __init__(self,dbstr,debug=False):
         self.dbengine = create_engine(dbstr,echo=debug)
         self.Session = sessionmaker(bind=self.dbengine)     
-        schema.Base.metadata.create_all(self.dbengine)
+#        schema.Base.metadata.create_all(self.dbengine)
     
     @contextmanager
     def dboperation(self):
