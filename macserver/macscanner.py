@@ -122,16 +122,17 @@ def scanner_run(interval_seconds,macscan):
 if __name__ =='__main__':
     #TODO: config
     #TODO: graceful shutdown procedure
-    scan_interval_s = 3    
+    scan_interval_s = 60    
     #for laptop
     #scan_backend = basic_ARP_scan(['-I wlan0'])    
     #scan_backend = basic_ARP_scan()
     from snmp_macscanner import snmp_macscan
     scan_backend = snmp_macscan
 
-    
+    connstr = 'mysql+pymysql://dan:8Rr2%ynRAm%ng*K4@localhost/macserver'
     #serv = MacServer('sqlite:///:memory:')
-    serv = MacServer('sqlite:///home/dan/macscanner.sqlite')
+    #serv = MacServer('sqlite://macscanner.sqlite')
+    serv = MacServer(connstr)
     ms = MACScanner(serv,opportunistic_add=True, arp_scan_func=scan_backend)
         
     loop = asyncio.get_event_loop()

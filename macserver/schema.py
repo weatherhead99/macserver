@@ -17,7 +17,8 @@ class IntegerPrimaryKeyMixin:
     id = Column(Integer,primary_key=True)
 
 class NameMixin:
-    name = Column(String,unique=True)
+    #length needed for VARCHAR on mysql
+    name = Column(String(32),unique=True)
         
 class DefaultReprMixin:
     def __repr__(self):
@@ -50,9 +51,9 @@ class User(IntegerPrimaryKeyMixin, NameMixin, DefaultReprMixin, Base):
     
 class Device(IntegerPrimaryKeyMixin,DefaultReprMixin, Base):
     __tablename__ = 'devices'
-    name = Column(String)
+    name = Column(String(32))
     #TODO: mac addresses are unique
-    hashmac = Column(String)
+    hashmac = Column(String(64))
     ownerid = Column(Integer,ForeignKey('users.id'))
     owner = relationship('User', back_populates='devices',foreign_keys=ownerid)
     timesheets = relationship('TimeSheet',secondary=DeviceTimeSheetAssociation,

@@ -16,5 +16,5 @@ def mysql_install(connstr,debug=False):
 
 
 if __name__ == '__main__':
-    connstr = 'mysql://dan@localhost/macserver'
+    connstr = 'mysql+pymysql://dan:8Rr2%ynRAm%ng*K4@localhost/macserver'
     mysql_install(connstr,True)    
