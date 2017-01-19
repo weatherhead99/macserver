@@ -53,8 +53,8 @@ class MACScanner:
             if k not in allowed_config_fields:
                 raise ValueError('invalid config option %s passed to %s' %(k, self.__class__))
                 
-            if not isinstance(v,allowed_config_fields[k]):
-                raise TypeError('invalid type for config option %s' % k)
+#            if not isinstance(v,allowed_config_fields[k]):
+#                raise TypeError('invalid type for config option %s' % k)
             
             setattr(self,k,v)
             
@@ -125,13 +125,13 @@ if __name__ =='__main__':
     scan_interval_s = 3    
     #for laptop
     #scan_backend = basic_ARP_scan(['-I wlan0'])    
-    scan_backend = basic_ARP_scan()
-    
-        
+    #scan_backend = basic_ARP_scan()
+    from snmp_macscanner import snmp_macscan
+    scan_backend = snmp_macscan
 
     
-    #serv = MacServer('sqlite:///:memory:')
-    serv = MacServer('sqlite:///home/dan/macscanner.sqlite')
+    serv = MacServer('sqlite:///:memory:')
+    #serv = MacServer('sqlite:///home/dan/macscanner.sqlite')
     ms = MACScanner(serv,opportunistic_add=True, arp_scan_func=scan_backend)
         
     loop = asyncio.get_event_loop()

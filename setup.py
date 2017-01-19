@@ -6,6 +6,6 @@ from distutils.core import setup
 setup(
       name='macscanner',
       version='0.0.0',
-      py_modules=['macscanner']
-      
+      py_modules=['macscanner'],
+      scripts=['macserver/macscanner.py']
       )

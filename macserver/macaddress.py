@@ -28,6 +28,10 @@ def sanitize(mac):
     mac = mac.replace('-',':').lower().strip()    
     return mac
                 
-    
+def string_from_octets(octets):
+    pass                
+                
 def shahash(mac):
+    #TODO: how do you do this properly in py3k?
     return hashlib.sha256(mac.encode()).digest()
+#    return hashlib.sha256(mac).digest()
