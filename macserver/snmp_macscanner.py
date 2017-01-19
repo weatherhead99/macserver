@@ -23,7 +23,7 @@ def yield_macaddrs():
          CommunityData('MiSMK_READ',mpModel=1),
            UdpTransportTarget(('192.168.0.3',161)),
            ContextData(),
-           ObjectType(ObjectIdentity('.1.3.6.1.4.1.8744.5.4.1.5.1.2.5'))
+           ObjectType(ObjectIdentity('.1.3.6.1.4.1.8744.5.4.1.5.1.2'))
            ) 
     for errIndic, errSt, errIdx, varBinds in it:
         if errIndic:
